@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi')
 
 const schemaContact = Joi.object({
   name: Joi.string()
@@ -10,7 +10,7 @@ const schemaContact = Joi.object({
     .required(),
   phone: Joi.string()
     .required(),
-});
+})
 
 const schemaChangeContact = Joi.object({
   name: Joi.string()
@@ -21,36 +21,35 @@ const schemaChangeContact = Joi.object({
     .email()
     .optional(),
   phone: Joi.string()
-    .pattern(new RegExp(patternPhone))
     .optional(),
-});
+})
 
 const schemaId = Joi.object({
   contactId: Joi.string()
-  .required(),
-});
+    .required(),
+})
 
 const validate = async (schema, obj, res, next) => {
   try {
-    await schema.validateAsync(obj);
-    next();
+    await schema.validateAsync(obj)
+    next()
   } catch (error) {
     res.status(400).json({
-      status: "error",
+      status: 'error',
       code: 400,
       message: 'Validation error',
-    });
+    })
   }
-};
+}
 
 module.exports.contactValidation = async (req, res, next) => {
-  return await validate(schemaContact, req.body, res, next);
-};
+  return await validate(schemaContact, req.body, res, next)
+}
 
 module.exports.contactChangeValidation = async (req, res, next) => {
-  return await validate(schemaChangeContact, req.body, res, next);
-};
+  return await validate(schemaChangeContact, req.body, res, next)
+}
 
 module.exports.idValidation = async (req, res, next) => {
-  return await validate(schemaId, req.params, res, next);
-};
+  return await validate(schemaId, req.params, res, next)
+}
