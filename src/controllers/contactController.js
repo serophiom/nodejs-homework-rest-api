@@ -47,7 +47,7 @@ const addContact = async (req, res, next) => {
 const changeContact = async (req, res, next) => {
   try {
     const contact = await Contacts.updateContact(
-      req.pqrams.contactId,
+      req.params.contactId,
       req.body
     )
     if (contact) {
