@@ -1,33 +1,43 @@
-const Joi = require('joi')
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
+const { ValidInfoContact } = require('../../config/constant')
 
 const schemaContact = Joi.object({
   name: Joi.string()
-    .min(2)
-    .max(150)
+    .min(ValidInfoContact.MIN_LENGTH_NAME)
+    .max(ValidInfoContact.MAX_LENGTH_NAME)
     .required(),
   email: Joi.string()
     .email()
     .required(),
   phone: Joi.string()
     .required(),
+  favorite: Joi.boolean()
+  .optional(),
 })
 
 const schemaChangeContact = Joi.object({
   name: Joi.string()
-    .min(3)
-    .max(30)
+    .min(ValidInfoContact.MIN_LENGTH_NAME)
+    .max(ValidInfoContact.MAX_LENGTH_NAME)
     .optional(),
   email: Joi.string()
     .email()
     .optional(),
   phone: Joi.string()
     .optional(),
-})
+  favorite: Joi.boolean()
+    .optional(),
+});
 
 const schemaId = Joi.object({
-  contactId: Joi.string()
+  contactId: Joi.objectId()
     .required(),
 })
+
+const schemaStatusContact = Joi.object({
+  favorite: Joi.boolean().required(),
+});
 
 const validate = async (schema, obj, res, next) => {
   try {
@@ -37,8 +47,8 @@ const validate = async (schema, obj, res, next) => {
     res.status(400).json({
       status: 'error',
       code: 400,
-      message: 'Validation error',
-    })
+      message: `Validation error: ${error.message}`,
+    });
   }
 }
 
@@ -53,3 +63,8 @@ module.exports.contactChangeValidation = async (req, res, next) => {
 module.exports.idValidation = async (req, res, next) => {
   return await validate(schemaId, req.params, res, next)
 }
+
+module.exports.validateStatusContact = async (req, res, next) => {
+  return await validate(schemaStatusContact, req.body, res, next);
+};
+
