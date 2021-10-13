@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { ValidInfoContact } = require('../config/constant')
+const { ValidInfoContact } = require('../config/constants')
 
 const contactSchema = new Schema(
   {
