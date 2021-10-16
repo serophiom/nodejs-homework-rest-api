@@ -1,14 +1,13 @@
-const { Schema, model } = require('mongoose')
-const { Gender } = require('../config/constants')
+const { Schema, model } = require('mongoose');
+const { Gender } = require('../config/constants');
+const bcrypt = require('bcryptjs');
+const SALT_FACTOR = 6;
 
 const usertSchema = new Schema(
   {
     name: {
       type: String,
       default: 'Guest',
-    //   minLength: ValidInfoContact.MIN_LENGTH_NAME,
-    //   maxLength: ValidInfoContact.MAX_LENGTH_NAME,
-    //   required: [true, 'Set name for user'],
     },
     email: {
       type: String,
@@ -46,6 +45,18 @@ const usertSchema = new Schema(
       toObject: { virtuals: true },
     }
 );
+
+usertSchema.pre('save', async function(next) {
+  if(this.isModified('password')) {
+    const salt = await bcrypt.genSalt(SALT_FACTOR);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next()
+});
+
+usertSchema.methods.isValidPassword = async function(password) {
+  return bcrypt.compare(password, this.password);
+};
 
 const User = model('user', contactSchema)
 

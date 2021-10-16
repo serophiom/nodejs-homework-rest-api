@@ -33,7 +33,19 @@ const registration = async (req, res, next) => {
 };
 
 const logIn = async (req, res, next) => {
-    res.json()
+    const { email, password } = req.body;
+    const user = await Users.findByemail(email);
+    const isValidPassword = await user.isValidPassword(password);
+    if (!user || !isValidPassword) {
+        return res
+            .status(HttpCode.UNAUTHORIZED)
+            .json({
+            status: 'error',
+            code: HttpCode.UNAUTHORIZED,
+            message: 'Invalid credentials',
+          })
+    }
+    res.json({});
 };
 
 const logOut = async (req, res, next) => {
