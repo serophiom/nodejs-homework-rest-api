@@ -1,5 +1,9 @@
+const jwt = require('jsonwebtoken');
 const Users = require('../../repository/usersRepository');
 const { HttpCode } = require ('../../config/constants');
+
+require('dotenv').config();
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const registration = async (req, res, next) => {
     const {name, email, password, gender} = req.body;
@@ -43,13 +47,27 @@ const logIn = async (req, res, next) => {
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
             message: 'Invalid credentials',
-          })
+        })
     }
-    res.json({});
+    const id = user._id;
+    const payload = { id };
+    const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '1h'});
+    await Users.updateToken(id, token)
+    return res
+            .status(HttpCode.OK)
+            .json({
+            status: 'success',
+            code: HttpCode.OK,
+            data: {
+                token,
+            },
+        })
 };
 
 const logOut = async (req, res, next) => {
-    res.json()
+    const id = req.user._id;
+    await Users.updateToken(id, null)
+    return res.status(HttpCode.NO_CONTENT).json({});
 };
 
 module.exports = {
