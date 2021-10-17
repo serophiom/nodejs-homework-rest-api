@@ -7,9 +7,10 @@ const {
     logOut,
 } = require('../../controllers/usersController');
 const guard = require('../../../helpers/guard');
+const loginLimit = require('../../../helpers/rate-limit-login');
 
 router.post('/registration', registration);
-router.post('/logIn', logIn);
+router.post('/logIn', loginLimit, logIn);
 router.post('/logOut', guard, logOut);
 
 module.exports = router;
