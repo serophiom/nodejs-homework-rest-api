@@ -10,7 +10,7 @@ const wrapper = (fn) => async (req, res, next) => {
               .json({ status: 'error', code: 400, message: error.message })
             break
             case 'CustomError':
-                return res
+               return res
               .status(error.status)
               .json({ status: 'error', code: error.status, message: error.message })
             break

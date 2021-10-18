@@ -29,11 +29,6 @@ app.use((req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  // if (error.name === "ValidationError") {
-  //   return res
-  //     .status(400)
-  //     .json({ status: "error", code: 400, message: error.message });
-  // }
   res.status(500).json({ status: "fail", code: 500, message: error.message });
 });
 

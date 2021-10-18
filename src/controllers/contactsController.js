@@ -20,7 +20,7 @@ const getContactById = async (req, res, next) => {
         code: 200,
         data: { contact },
         message: `Contact with id ${req.params.contactId} found`
-      })
+      });
     }
     return res.status(404).json({
       status: 'error',
@@ -61,7 +61,7 @@ const changeContact = async (req, res, next) => {
           status: 'success',
           code: 200,
           data: { contact }
-        })
+        });
     }
     return res.status(404).json({
       status: 'error',

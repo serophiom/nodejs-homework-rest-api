@@ -25,7 +25,7 @@ const usertSchema = new Schema(
     subscription: {
         type: String,
         enum: {
-            values: [Subscription.STARTER, Gender.PRO, Gender.BUSINESS],
+            values: [Subscription.STARTER, Subscription.PRO, Subscription.BUSINESS],
         },
         default: Subscription.STARTER,
     },
@@ -50,14 +50,14 @@ usertSchema.pre('save', async function(next) {
     const salt = await bcrypt.genSalt(SALT_FACTOR);
     this.password = await bcrypt.hash(this.password, salt);
   }
-  next()
+  next();
 });
 
 usertSchema.methods.isValidPassword = async function(password) {
   return bcrypt.compare(password, this.password);
 };
 
-const User = model('user', contactSchema)
+const User = model('user', userSchema)
 
 module.exports = {
   User,
