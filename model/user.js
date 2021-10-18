@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const { Gender } = require('../config/constants');
+const { Subscription } = require('../config/constants');
 const bcrypt = require('bcryptjs');
 const SALT_FACTOR = 6;
 
@@ -18,17 +18,16 @@ const usertSchema = new Schema(
         return re.test(String(value).toLocaleLowerCase())
       },
     },
-    passwors: {
+    password: {
         type: String,
         required: [true, 'Set password for user'],
     },
-    gender: {
+    subscription: {
         type: String,
         enum: {
-            values: [Gender.MALE, Gender.FEMALE, Gender.NONE],
-            massage: 'Gender not allowed',
+            values: [Subscription.STARTER, Gender.PRO, Gender.BUSINESS],
         },
-        default: Gender.NONE,
+        default: Subscription.STARTER,
     },
     token: {
         type: String,

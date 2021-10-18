@@ -3,11 +3,12 @@ const ValidInfoContact = {
   MAX_LENGTH_NAME: 100,
 }
 
-const Gender = {
-  MALE: 'male',
-  FEMALE: 'female',
-  NONE: 'none',
+const Subscription = {
+  STARTER: "starter",
+  PRO: "pro",
+  BUSINESS: "business",
 };
+
 
 const HttpCode = {
   OK: 200,
@@ -25,6 +26,6 @@ const HttpCode = {
 
 module.exports = {
   ValidInfoContact,
-  Gender,
+  Subscription,
   HttpCode,
 }

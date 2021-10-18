@@ -17,7 +17,6 @@ const {
   updateStatusContact,
 } = require('../../controllers/contactsController');
 const guard = require('../../../helpers/guard');
-const role = require('../../../helpers/role');
 
 router.get('/', guard, getContacts);
 
@@ -30,9 +29,5 @@ router.delete('/:contactId', guard, idValidation, deleteContact);
 router.patch('/:contactId', guard, [idValidation, contactChangeValidation], changeContact);
 
 router.patch('/:contactId/favorite', guard, [idValidation, validateStatusContact], updateStatusContact);
-
-router.get('/test', guard, (req, res, next) => {
-
-});
 
 module.exports = router;
