@@ -1,4 +1,4 @@
-const { HttpCode } = require ('../../config/constants');
+const { HttpCode } = require ('../config/constants');
 
 const role = (role) => (req, res, next) => {
     const roleUser = req.user.subscription;
@@ -15,4 +15,4 @@ const role = (role) => (req, res, next) => {
     return next();
 };
 
-nodule.exports = role;
+module.exports = role;

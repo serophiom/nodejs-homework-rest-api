@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Users = require('../../repository/usersRepository');
+const Users = require('../../repository/usersReposyitory');
 const { HttpCode, Subscription } = require ('../../config/constants');
 
 require('dotenv').config();
@@ -28,7 +28,8 @@ const registration = async (req, res, next) => {
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
-                gender: newUser.subscription,
+                subscription: newUser.subscription,
+                avatar: newUser.avatar,
             },
           });
     } catch(error) {

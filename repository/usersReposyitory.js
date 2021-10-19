@@ -25,7 +25,7 @@ const updateSubscription = async (userId, body) => {
     );
 };
 
-modile.exports = {
+module.exports = {
     findById,
     findByEmail,
     create,

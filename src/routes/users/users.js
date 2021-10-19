@@ -29,5 +29,6 @@ router.post('/registration', validateUserRegistration, registration);
 router.post('/logIn', loginLimit, validateUserLogIn, logIn);
 router.post('/logOut', guard, logOut);
 router.get('/current', guard, currentUser);
+router.patch('/public/avatars', guard, () => {});
 
 module.exports = router;
