@@ -1,9 +1,20 @@
 const jwt = require('jsonwebtoken');
+const cloudinary = require('cloudinary').v2
+const path = require('path');
+const mkdirp = require('mkdirp');
 const Users = require('../../repository/usersReposyitory');
+const UploadService = require('../../sevices/file-upload');
 const { HttpCode, Subscription } = require ('../../config/constants');
 
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDE_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: API_SECRET,
+  secure: true,
+});
 
 const registration = async (req, res, next) => {
     const { name, email, password, subscription } = req.body;
@@ -69,6 +80,25 @@ const logOut = async (req, res, next) => {
     const id = req.user._id;
     await Users.updateToken(id, null)
     return res.status(HttpCode.NO_CONTENT).json({});
+};
+
+const uploadAvatar = async (req, res, next) => {
+  const id = String(req.user._id);
+  const file = req.file;
+  const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
+  const destination = path.join(AVATAR_OF_USERS, id);
+  await mkdirp(destination);
+  const uploadService = new UploadService(destination);
+  const avatarUrl = await uploadService.save(file, id);
+  await Users.updateAvatar(id, avatarUrl);
+ 
+  return res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    data: {
+      avatar: avatarUrl,
+    },
+  });
 };
 
 const currentUser = async (req, res, next) => {
@@ -144,6 +174,7 @@ module.exports = {
     registration,
     logIn,
     logOut,
+    uploadAvatar,
     currentUser,
     updateSubscription,
     userStarter,

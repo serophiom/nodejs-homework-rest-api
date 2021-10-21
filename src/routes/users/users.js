@@ -10,6 +10,7 @@ const {
     registration,
     logIn,
     logOut,
+    uploadAvatar,
     currentUser,
     updateSubscription,
     userStarter,
@@ -20,6 +21,7 @@ const guard = require('../../../helpers/guard');
 const loginLimit = require('../../../helpers/rate-limit-login');
 const { Subscription } = require('../../../config/constants');
 const role = require('../../../helpers/role');
+const upload = require('../../../helpers/uploads');
 
 router.patch('/', guard, validateSubscriptionUser, updateSubscription);
 router.get('/starter', guard, role(Subscription.STARTER), userStarter);
@@ -29,6 +31,6 @@ router.post('/registration', validateUserRegistration, registration);
 router.post('/logIn', loginLimit, validateUserLogIn, logIn);
 router.post('/logOut', guard, logOut);
 router.get('/current', guard, currentUser);
-router.patch('/public/avatars', guard, () => {});
+router.patch('/public/avatars', guard, upload.single('avatar'), uploadAvatar);
 
 module.exports = router;
