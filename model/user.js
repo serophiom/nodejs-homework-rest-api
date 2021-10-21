@@ -44,6 +44,7 @@ const userSchema = new Schema(
         )
       },
     },
+    idUserCloud: { type: String, default: null }, //
   },
     {
       versionKey: false,

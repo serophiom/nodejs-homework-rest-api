@@ -1,20 +1,14 @@
 const jwt = require('jsonwebtoken');
-const cloudinary = require('cloudinary').v2
-const path = require('path');
-const mkdirp = require('mkdirp');
+const fs = require('fs/promises'); //
+// const path = require('path');
+// const mkdirp = require('mkdirp');
 const Users = require('../../repository/usersReposyitory');
-const UploadService = require('../../sevices/file-upload');
+// const UploadService = require('../../sevices/file-upload');
+const UploadService = require('../../sevices/cloud-upload'); //
 const { HttpCode, Subscription } = require ('../../config/constants');
 
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDE_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: API_SECRET,
-  secure: true,
-});
 
 const registration = async (req, res, next) => {
     const { name, email, password, subscription } = req.body;
@@ -82,16 +76,37 @@ const logOut = async (req, res, next) => {
     return res.status(HttpCode.NO_CONTENT).json({});
 };
 
-const uploadAvatar = async (req, res, next) => {
-  const id = String(req.user._id);
-  const file = req.file;
-  const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
-  const destination = path.join(AVATAR_OF_USERS, id);
-  await mkdirp(destination);
-  const uploadService = new UploadService(destination);
-  const avatarUrl = await uploadService.save(file, id);
-  await Users.updateAvatar(id, avatarUrl);
+// const uploadAvatar = async (req, res, next) => {
+//   const id = String(req.user._id);
+//   const file = req.file;
+//   const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
+//   const destination = path.join(AVATAR_OF_USERS, id);
+//   await mkdirp(destination);
+//   const uploadService = new UploadService(destination);
+//   const avatarUrl = await uploadService.save(file, id);
+//   await Users.updateAvatar(id, avatarUrl);
  
+//   return res.status(HttpCode.OK).json({
+//     status: 'success',
+//     code: HttpCode.OK,
+//     data: {
+//       avatar: avatarUrl,
+//     },
+//   });
+// };
+
+const uploadAvatar = async (req, res, next) => {  //
+  const { id, idUserCloud } = req.user;
+  const file = req.file;
+  const destination = 'Avatars'
+  const uploadService = new UploadService(destination);
+  const { avatarUrl, returnIdCloudUser } = await uploadService.save(file.path, idUserCloud);
+  await Users.updateAvatar(id, avatarUrl, returnIdCloudUser);
+  try {
+    await fs.unlink(file.path)
+  } catch(error) {
+    console.log(error.message);
+  }
   return res.status(HttpCode.OK).json({
     status: 'success',
     code: HttpCode.OK,
@@ -99,7 +114,7 @@ const uploadAvatar = async (req, res, next) => {
       avatar: avatarUrl,
     },
   });
-};
+};  //
 
 const currentUser = async (req, res, next) => {
     try {
