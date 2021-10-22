@@ -45,7 +45,7 @@ const registration = async (req, res, next) => {
 const logIn = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
-    const isValidPassword = await user.isValidPassword(password);
+    const isValidPassword = await user?.isValidPassword(password);
     if (!user || !isValidPassword) {
         return res
             .status(HttpCode.UNAUTHORIZED)
