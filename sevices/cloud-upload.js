@@ -8,7 +8,7 @@ cloudinary.config({
     api_key: process.env.API_CLOUD_KEY,
     api_secret: process.env.API_CLOUD_SECRET,
     secure: true,
-  });
+});
 
 class UploadFileAvatar {
     constructor(destination) {

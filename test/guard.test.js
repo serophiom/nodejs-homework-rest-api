@@ -12,7 +12,7 @@ describe('Unit test guard helper', () => {
         next = jest.fn();
     });
 
-    it('User exist', async () => {
+    it.skip('User exist', async () => {
         passport.authenticate = jest.fn(
             (strategy, options, callback) => (req, res, next) => callback(null, user),
         );
