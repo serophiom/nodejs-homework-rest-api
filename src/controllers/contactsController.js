@@ -1,21 +1,8 @@
 const Contacts = require('../../repository/contactsRepository');
 const Users = require('../../repository/usersReposyitory');
 
-// const getContacts = async (req, res, next) => {
-//   try {
-//     const userId = req.user._id;
-//     const data = await Contacts.listContacts(userId, req.query);
-//     res.json({ status: 'success', code: 200, data: { ...data } });
-//   } catch (error) {
-//     next(error)
-//   }
-// };
-
 const getContacts = async (req, res) => {
-  // console.log(req.user)
-  // const userId = req.user._id;
-  const user = await Users.findByEmail(req.body.email);
-  const userId = user._id;
+  const userId = req.user._id;
   const data = await Contacts.listContacts(userId, req.query);
   res.json({ status: "success", code: 200, data: { ...data } });
 };

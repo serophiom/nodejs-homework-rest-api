@@ -1,11 +1,6 @@
 const { Contact } = require('../model/contact');
 
 const listContacts = async (userId, query) => {
-  // const result = await Contact.find({ owner: userId })
-  //   .populate({
-  //     path: 'owner',
-  //     select: 'name email gender createdAt, updatedAt',
-  //   });
   const { sortBy, sortByDesc, filter, favorite = null, limit = 10, page = 1 } = query;
   const searchOptions = { owner: userId };
   

@@ -6,10 +6,6 @@ const SALT_FACTOR = 6;
 
 const userSchema = new Schema(
   {
-    // name: {
-    //   type: String,
-    //   default: 'Guest',
-    // },
     email: {
       type: String,
       required: [true, 'Set email for user'],
@@ -44,7 +40,7 @@ const userSchema = new Schema(
         );
       },
     },
-    idUserCloud: { type: String, default: null }, //
+    idUserCloud: { type: String, default: null },
   },
     {
       versionKey: false,

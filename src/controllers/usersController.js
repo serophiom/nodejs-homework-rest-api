@@ -1,10 +1,7 @@
 const jwt = require('jsonwebtoken');
-const fs = require('fs/promises'); //
-// const path = require('path');
-// const mkdirp = require('mkdirp');
+const fs = require('fs/promises');
 const Users = require('../../repository/usersReposyitory');
-// const UploadService = require('../../sevices/file-upload');
-const UploadService = require('../../sevices/cloud-upload'); //
+const UploadService = require('../../sevices/cloud-upload');
 const { HttpCode, Subscription } = require ('../../config/constants');
 
 require('dotenv').config();
@@ -94,7 +91,7 @@ const logOut = async (req, res, next) => {
 //   });
 // };
 
-const uploadAvatar = async (req, res, next) => {  //
+const uploadAvatar = async (req, res, next) => {
   const { id, idUserCloud } = req.user;
   const file = req.file;
   const destination = 'Avatars'
@@ -113,7 +110,7 @@ const uploadAvatar = async (req, res, next) => {  //
       avatar: avatarUrl,
     },
   });
-};  //
+};
 
 const currentUser = async (req, res, next) => {
     try {

@@ -25,8 +25,8 @@ const updateSubscription = async (userId, body) => {
     );
 };
 
-const updateAvatar = async (id, avatarURL, idUserCloud = null) => { //idUserCloud = null
-    return await User.updateOne({ _id: id }, { avatarURL, idUserCloud }); //idUserCloud
+const updateAvatar = async (id, avatarURL, idUserCloud = null) => {
+    return await User.updateOne({ _id: id }, { avatarURL, idUserCloud });
 };
 
 

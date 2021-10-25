@@ -31,6 +31,6 @@ router.post('/registration', validateUserRegistration, registration);
 router.post('/login', loginLimit, validateUserLogIn, logIn);
 router.post('/logout', guard, logOut);
 router.get('/current', guard, currentUser);
-router.patch('/avatars', guard, upload.single('avatarURL'), uploadAvatar);
+router.patch('/avatar', guard, upload.single('avatarURL'), uploadAvatar);
 
 module.exports = router;
