@@ -5,7 +5,6 @@ const db =require('../config/db');
 const app = require('../app');
 const { User } = require('../model/user');
 const { newUserForRouterUser } = require('./data/data');
-const jestConfig = require('../jest.config');
 
 jest.mock('cloudinary');
 
@@ -26,7 +25,7 @@ describe('Test route users', () => {
             const response = await request(app)
                 .post('/api/users/registration')
                 .send(newUserForRouterUser)
-                .set('Accept', 'application');
+                .set('Accept', 'application/json');
             expect(response.status).toEqual(201);
             expect(response.body).toBeDefined();
         });
@@ -35,7 +34,7 @@ describe('Test route users', () => {
             const response = await request(app)
                 .post('/api/users/registration')
                 .send(newUserForRouterUser)
-                .set('Accept', 'application');
+                .set('Accept', 'application/json');
             expect(response.status).toEqual(409);
             expect(response.body).toBeDefined();
         });
@@ -55,7 +54,7 @@ describe('Test route users', () => {
             const response = await request(app)
                 .patch('/api/users/avatar')
                 .set('Authorization', `Bearer ${token}`)
-                .attach('avatar', buffer, 'user-avatar.jpg')
+                .attach('avatarURL', buffer, 'user-avatar.jpg')
             expect(response.status).toEqual(200);
             expect(response.body).toBeDefined();
         });

@@ -11,7 +11,7 @@ const limiter = rateLimit({
                 status: 'error',
                 code: HttpCode.TOO_MANY_REQUESTS,
                 message: 'Too many requests',
-            })
+            });
     },
   });
 

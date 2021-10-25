@@ -4,7 +4,7 @@ const { promisify } = require('util');
 require('dotenv').config();
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDE_NAME,
+    cloud_name: process.env.CLOUD_NAME,
     api_key: process.env.API_CLOUD_KEY,
     api_secret: process.env.API_CLOUD_SECRET,
     secure: true,
@@ -20,8 +20,8 @@ class UploadFileAvatar {
         const { public_id: returnIdUserCloud, secure_url: avatarUrl } = await this.uploadCloud(filePath, {
             public_id: idUserCloud,
             folder: this.destination,
-            transformation: { width: 250, height: 250, crop: 'pad' },
-        })
+            transformation: { width: 250, hight: 250, crop: 'pad' },
+        });
         return { avatarUrl: avatarUrl, returnIdUserCloud: returnIdUserCloud.replace(`${this.destination}/`, '') };
     }
 };

@@ -33,7 +33,7 @@ const validate = async (schema, obj, res, next) => {
   try {
     await schema.validateAsync(obj);
     next();
-  } catch (err) {
+  } catch (error) {
     res.status(HttpCode.BAD_REQUEST).json({
       status: "error",
       code: HttpCode.BAD_REQUEST,

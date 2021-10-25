@@ -33,16 +33,17 @@ const contactSchema = new Schema(
       versionKey: false,
       timestamps: true,
       toJSON: { virtuals: true, transform: function(doc, ret) {
-        delete ret._id
-        return ret
-      } },
+        delete ret._id;
+        return ret;
+      },
+    },
       toObject: { virtuals: true },
     }
 );
 
 contactSchema.plugin(mongoosePaginate);
 
-const Contact = model('Contact', contactSchema)
+const Contact = model('Contact', contactSchema);
 
 module.exports = {
   Contact,

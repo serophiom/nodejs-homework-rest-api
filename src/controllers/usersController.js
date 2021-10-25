@@ -11,7 +11,7 @@ require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const registration = async (req, res, next) => {
-    const { name, email, password, subscription } = req.body;
+    const { email, password, subscription } = req.body;
     const user = await Users.findByEmail(email);
     if (user) {
         return res
@@ -23,7 +23,7 @@ const registration = async (req, res, next) => {
           });
     }
     try {
-        const newUser = await Users.create({ name, email, password, subscription });
+        const newUser = await Users.create({ email, password, subscription });
         return res
             .status(HttpCode.CREATED)
             .json({
@@ -31,10 +31,9 @@ const registration = async (req, res, next) => {
             code: HttpCode.CREATED,
             data: {
                 id: newUser.id,
-                name: newUser.name,
                 email: newUser.email,
                 subscription: newUser.subscription,
-                avatar: newUser.avatar,
+                avatarURL: newUser.avatarURL,
             },
           });
     } catch(error) {
@@ -53,11 +52,11 @@ const logIn = async (req, res, next) => {
             status: 'error',
             code: HttpCode.UNAUTHORIZED,
             message: 'Invalid credentials',
-        })
+        });
     }
     const id = user._id;
     const payload = { id };
-    const token = jwt.sign(payload, SECRET_KEY, {expiresIn: '1h'});
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
     await Users.updateToken(id, token);
     return res
             .status(HttpCode.OK)

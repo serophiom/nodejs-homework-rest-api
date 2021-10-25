@@ -10,7 +10,7 @@ const role = (role) => (req, res, next) => {
             status: 'error',
             code: HttpCode.FORBIDDEN,
             message: 'Access is denied',
-        })
+        });
     }
     return next();
 };

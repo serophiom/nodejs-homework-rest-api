@@ -4,6 +4,6 @@ module.exports = {
         uploader: {
             upload: (a,b, callback) =>
             callback(null, { public_id: '12345', secure_url: 'http://geg.com' }),
-        }
-    }
+        },
+    },
 };

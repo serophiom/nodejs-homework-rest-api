@@ -6,12 +6,12 @@ const helmet = require('helmet');
 require('dotenv').config();
 const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
 
-const contactsRouter = require('./src/routes/contacts/contacts');
 const usersRouter = require('./src/routes/users/users');
+const contactsRouter = require('./src/routes/contacts/contacts');
 
 const app = express();
 
-const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
+const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(express.static(AVATAR_OF_USERS));
 app.use(helmet());
@@ -32,7 +32,7 @@ app.use((req, res) => {
 });
 
 app.use((error, req, res, next) => {
-  const statusCode = err.status || 500;
+  const statusCode = error.status || 500;
   res.status(statusCode).json({
     status: statusCode === 500 ? 'fail' : 'error',
     code: statusCode,

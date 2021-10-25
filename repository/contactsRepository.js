@@ -7,10 +7,12 @@ const listContacts = async (userId, query) => {
   //     select: 'name email gender createdAt, updatedAt',
   //   });
   const { sortBy, sortByDesc, filter, favorite = null, limit = 10, page = 1 } = query;
-  const searchOptions = { owner: userId }
+  const searchOptions = { owner: userId };
+  
   if (favorite !== null) {
     searchOptions.favorite = favorite;
-  };
+  }
+  
   const results = await Contact.paginate(searchOptions, {
     limit,
     page,

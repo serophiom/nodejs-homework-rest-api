@@ -28,9 +28,9 @@ router.get('/starter', guard, role(Subscription.STARTER), userStarter);
 router.get('/pro', guard, role(Subscription.PRO), userPro);
 router.get('/business', guard, role(Subscription.BUSINESS), userBusiness);
 router.post('/registration', validateUserRegistration, registration);
-router.post('/logIn', loginLimit, validateUserLogIn, logIn);
-router.post('/logOut', guard, logOut);
+router.post('/login', loginLimit, validateUserLogIn, logIn);
+router.post('/logout', guard, logOut);
 router.get('/current', guard, currentUser);
-router.patch('/public/avatars', guard, upload.single('avatar'), uploadAvatar);
+router.patch('/avatars', guard, upload.single('avatarURL'), uploadAvatar);
 
 module.exports = router;
