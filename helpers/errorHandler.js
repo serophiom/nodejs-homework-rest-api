@@ -7,16 +7,16 @@ const wrapper = (fn) => async (req, res, next) => {
             case 'ValidationError':
                return res
               .status(400)
-              .json({ status: 'error', code: 400, message: error.message })
+              .json({ status: 'error', code: 400, message: error.message });
             break
             case 'CustomError':
                return res
               .status(error.status)
-              .json({ status: 'error', code: error.status, message: error.message })
+              .json({ status: 'error', code: error.status, message: error.message });
             break
             default:
-                next(error)
-                breake
+                next(error);
+                breake;
         }
     }
 };

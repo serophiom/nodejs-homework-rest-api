@@ -14,7 +14,7 @@ const create = async (options) => {
 };
 
 const updateToken = async (id, token) => {
-    return await User.updateOne( {_id: id }, { token });
+    return await User.updateOne({ _id: id }, { token });
 };
 
 const updateSubscription = async (userId, body) => {
@@ -25,10 +25,16 @@ const updateSubscription = async (userId, body) => {
     );
 };
 
-modile.exports = {
+const updateAvatar = async (id, avatarURL, idUserCloud = null) => {
+    return await User.updateOne({ _id: id }, { avatarURL, idUserCloud });
+};
+
+
+module.exports = {
     findById,
     findByEmail,
     create,
     updateToken,
     updateSubscription,
+    updateAvatar,
 };
