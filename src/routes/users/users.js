@@ -16,6 +16,8 @@ const {
     userStarter,
     userPro,
     userBusiness,
+    verifyUser,
+    repeatEmailForVerifyUser,
 } = require('../../controllers/usersController');
 const guard = require('../../../helpers/guard');
 const loginLimit = require('../../../helpers/rate-limit-login');
@@ -32,5 +34,8 @@ router.post('/login', loginLimit, validateUserLogIn, logIn);
 router.post('/logout', guard, logOut);
 router.get('/current', guard, currentUser);
 router.patch('/avatar', guard, upload.single('avatarURL'), uploadAvatar);
+
+router.get('/verify/:token', verifyUser);
+router.post('/verify', repeatEmailForVerifyUser);
 
 module.exports = router;

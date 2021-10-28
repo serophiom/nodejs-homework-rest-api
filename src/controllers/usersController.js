@@ -8,31 +8,32 @@ require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const registration = async (req, res, next) => {
-    const { email, password, subscription } = req.body;
-    const user = await Users.findByEmail(email);
-    if (user) {
-        return res
-            .status(HttpCode.CONFLICT)
-            .json({
-            status: 'error',
-            code: HttpCode.CONFLICT,
-            message: 'Email is already exist',
-          });
-    }
-    try {
-        const newUser = await Users.create({ email, password, subscription });
-        return res
-            .status(HttpCode.CREATED)
-            .json({
-            status: 'success',
-            code: HttpCode.CREATED,
-            data: {
-                id: newUser.id,
-                email: newUser.email,
-                subscription: newUser.subscription,
-                avatarURL: newUser.avatarURL,
-            },
-          });
+  const { email, password, subscription } = req.body;
+  const user = await Users.findByEmail(email);
+  if (user) {
+    return res
+      .status(HttpCode.CONFLICT)
+      .json({
+      status: 'error',
+      code: HttpCode.CONFLICT,
+      message: 'Email is already exist',
+    });
+  }
+  try {
+    // TOD: Send email for verify user
+    const newUser = await Users.create({ email, password, subscription });
+    return res
+      .status(HttpCode.CREATED)
+      .json({
+      status: 'success',
+      code: HttpCode.CREATED,
+        data: {
+          id: newUser.id,
+          email: newUser.email,
+          subscription: newUser.subscription,
+          avatarURL: newUser.avatarURL,
+        },
+      });
     } catch(error) {
         next(error)
     }
@@ -42,7 +43,7 @@ const logIn = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
     const isValidPassword = await user?.isValidPassword(password);
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !user?.isVerified) {
         return res
             .status(HttpCode.UNAUTHORIZED)
             .json({
@@ -181,6 +182,14 @@ const updateSubscription = async (req, res) => {
     });
   };
 
+const verifyUser = async (req, res, next) => {
+
+};
+
+const repeatEmailForVerifyUser = async (req, res, next) => {
+
+};
+
 module.exports = {
     registration,
     logIn,
@@ -191,4 +200,6 @@ module.exports = {
     userStarter,
     userPro,
     userBusiness,
+    verifyUser,
+    repeatEmailForVerifyUser,
 };
