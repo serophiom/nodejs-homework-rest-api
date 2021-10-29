@@ -5,12 +5,13 @@ class EmailService {
         this.sender = sender
         switch (env) {
             case 'development':
-                this.link = 'http://localhost:300';           
+                this.link = 'http://127.0.0.1:3000';
                 break;
             case 'production':
                 this.link = 'link for production';           
                 break;
             default:
+                this.link = 'http://127.0.0.1:3000';
                 break;
         }
     }
@@ -41,6 +42,21 @@ class EmailService {
     };
 
     async sendVerifyEmail(email, name, verifyToken) {
-        
+      const emailHTML = this.createTemplateEmail(name, verifyToken);
+      const message = {
+        to: email,
+        subject: 'Verify your email',
+        html: emailHTML
+      }
+      try {
+        const result = await this.sender.send(message);
+        return true;
+      } catch (error) {
+        console.log(error.message);
+        return false;
+      } 
+      
     };
 };
+
+module.exports = EmailServiceж

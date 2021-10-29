@@ -3,6 +3,8 @@ const fs = require('fs/promises');
 const Users = require('../../repository/usersReposyitory');
 const UploadService = require('../../sevices/cloud-upload');
 const { HttpCode, Subscription } = require ('../../config/constants');
+const EmailService = require('../../sevices/email/service');
+const { CreateSenderSendGrid, CreateSenderNodemailer } = require('../../sevices/email/sender');
 
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -21,7 +23,18 @@ const registration = async (req, res, next) => {
   }
   try {
     // TOD: Send email for verify user
+
     const newUser = await Users.create({ email, password, subscription });
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      // new CreateSenderSendGrid(),
+      new CreateSenderNodemailer(),
+    )
+    const statusEmail = await emailService.sendVerifyEmail(
+      newUser.email,
+      newUser.name,
+      newUser.verifyToken
+    )
     return res
       .status(HttpCode.CREATED)
       .json({
@@ -32,6 +45,7 @@ const registration = async (req, res, next) => {
           email: newUser.email,
           subscription: newUser.subscription,
           avatarURL: newUser.avatarURL,
+          successEmail: statusEmail,
         },
       });
     } catch(error) {
