@@ -1,6 +1,6 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
-const { HttpCode, Subscription } = require('../../../config/constants');
+const { HttpCode, Subscription, ValidInfoContact } = require('../../../config/constants');
 
 const schemaUserRegistration = Joi.object({
   name: Joi.string()
