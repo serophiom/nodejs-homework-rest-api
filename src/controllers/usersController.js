@@ -28,7 +28,7 @@ const registration = async (req, res, next) => {
     const emailService = new EmailService(
       process.env.NODE_ENV,
       // new CreateSenderSendGrid(),
-      new CreateSenderNodemailer(),
+      new CreateSenderSendGrid(),
     )
     const statusEmail = await emailService.sendVerifyEmail(
       newUser.email,
@@ -197,11 +197,49 @@ const updateSubscription = async (req, res) => {
   };
 
 const verifyUser = async (req, res, next) => {
-
+    const user = await Users.findUserByVerifyToken(req.params.token);
+    if (user) {
+      await Users.updateTokenVerify(user._id, true, null);
+      return res.status(HttpCode.OK).json({
+        status: "success",
+        code: HttpCode.OK,
+        data: {
+          message: 'Success',
+        },
+      });
+    }
+    return res
+      .status(HttpCode.BAD_REQUEST)
+      .json({
+      status: 'error',
+      code: HttpCode.BAD_REQUEST,
+      message: 'Invalid token',
+    });
 };
 
 const repeatEmailForVerifyUser = async (req, res, next) => {
-
+  const { email } = req.body;
+  const user = await Users.findByEmail(email);
+  if (user) {
+    const { email, name, verifyToken } = user;
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      // new CreateSenderSendGrid(),
+      new CreateSenderNodemailer(),
+    )
+    const statusEmail = await emailService.sendVerifyEmail(
+      email,
+      name,
+      verifyToken,
+    )
+  }
+  return res.status(HttpCode.OK).json({
+    status: "success",
+    code: HttpCode.OK,
+    data: {
+      message: `Enable for ${Subscription.BUSINESS}`,
+    },
+  }); 
 };
 
 module.exports = {
