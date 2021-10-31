@@ -4,6 +4,7 @@ const {
     validateUserRegistration,
     validateUserLogIn,
     validateSubscriptionUser,
+    validateRepeatEmailForVerifyUser
 } = require('./validation');
 
 const {
@@ -35,7 +36,7 @@ router.post('/logout', guard, logOut);
 router.get('/current', guard, currentUser);
 router.patch('/avatar', guard, upload.single('avatarURL'), uploadAvatar);
 
-router.get('/verify/:token', verifyUser);
-router.post('/verify', repeatEmailForVerifyUser);
+router.get('/verify/:verificationToken', verifyUser);
+router.post('/verify', validateRepeatEmailForVerifyUser, repeatEmailForVerifyUser);
 
 module.exports = router;

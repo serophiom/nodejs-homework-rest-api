@@ -11,7 +11,7 @@ class EmailService {
                 this.link = 'link for production';           
                 break;
             default:
-                this.link = 'http://127.0.0.1:3000';
+                this.link = 'http://localhost:3000';
                 break;
         }
     }
@@ -19,7 +19,7 @@ class EmailService {
         const mailGenerator = new Mailgen({
             theme: 'neopolitan',
             product: {
-                name: 'Contacts api',
+                name: 'Contacts service',
                 link: this.link,
             },
         });
@@ -27,7 +27,7 @@ class EmailService {
         const email = {
             body: {
                 name,
-                intro: 'Contacts api! We\'re very excited to have you on board.',
+                intro: 'Contacts service! We are very excited to have you on board.',
                 action: {
                     instructions: 'To get started with Contacts api, please click here:',
                     button: {
@@ -59,4 +59,4 @@ class EmailService {
     };
 };
 
-module.exports = EmailServiceж
+module.exports = EmailService;

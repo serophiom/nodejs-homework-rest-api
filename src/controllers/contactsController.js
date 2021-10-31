@@ -1,5 +1,4 @@
 const Contacts = require('../../repository/contactsRepository');
-const Users = require('../../repository/usersReposyitory');
 
 const getContacts = async (req, res) => {
   const userId = req.user._id;

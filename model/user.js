@@ -7,6 +7,10 @@ const SALT_FACTOR = 6;
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      default: 'Guest'
+    },
     email: {
       type: String,
       required: [true, 'Set email for user'],
@@ -45,7 +49,7 @@ const userSchema = new Schema(
     isVerified: { type: Boolean, default: false },
     verifyToken: {
       type: String,
-      required: true,
+      required: [true, 'Verify token is required'],
       default: crypto.randomUUID()
     },
   },

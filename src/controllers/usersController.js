@@ -10,7 +10,7 @@ require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const registration = async (req, res, next) => {
-  const { email, password, subscription } = req.body;
+  const { name, email, password, subscription } = req.body;
   const user = await Users.findByEmail(email);
   if (user) {
     return res
@@ -24,17 +24,17 @@ const registration = async (req, res, next) => {
   try {
     // TOD: Send email for verify user
 
-    const newUser = await Users.create({ email, password, subscription });
+    const newUser = await Users.create({ name, email, password, subscription });
     const emailService = new EmailService(
       process.env.NODE_ENV,
-      // new CreateSenderSendGrid(),
+      // new CreateSenderNodemailer(),
       new CreateSenderSendGrid(),
     )
     const statusEmail = await emailService.sendVerifyEmail(
       newUser.email,
       newUser.name,
       newUser.verifyToken
-    )
+    );
     return res
       .status(HttpCode.CREATED)
       .json({
@@ -42,6 +42,7 @@ const registration = async (req, res, next) => {
       code: HttpCode.CREATED,
         data: {
           id: newUser.id,
+          name: newUser.name,
           email: newUser.email,
           subscription: newUser.subscription,
           avatarURL: newUser.avatarURL,
@@ -197,7 +198,7 @@ const updateSubscription = async (req, res) => {
   };
 
 const verifyUser = async (req, res, next) => {
-    const user = await Users.findUserByVerifyToken(req.params.token);
+    const user = await Users.findUserByVerifyToken(req.params.verificationToken);
     if (user) {
       await Users.updateTokenVerify(user._id, true, null);
       return res.status(HttpCode.OK).json({
@@ -227,7 +228,7 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
       // new CreateSenderSendGrid(),
       new CreateSenderNodemailer(),
     )
-    const statusEmail = await emailService.sendVerifyEmail(
+    await emailService.sendVerifyEmail(
       email,
       name,
       verifyToken,
@@ -237,7 +238,7 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
     status: "success",
     code: HttpCode.OK,
     data: {
-      message: `Enable for ${Subscription.BUSINESS}`,
+      message: 'Verification email is send',
     },
   }); 
 };
