@@ -3,36 +3,52 @@ const fs = require('fs/promises');
 const Users = require('../../repository/usersReposyitory');
 const UploadService = require('../../sevices/cloud-upload');
 const { HttpCode, Subscription } = require ('../../config/constants');
+const EmailService = require('../../sevices/email/service');
+const { CreateSenderSendGrid, CreateSenderNodemailer } = require('../../sevices/email/sender');
 
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const registration = async (req, res, next) => {
-    const { email, password, subscription } = req.body;
-    const user = await Users.findByEmail(email);
-    if (user) {
-        return res
-            .status(HttpCode.CONFLICT)
-            .json({
-            status: 'error',
-            code: HttpCode.CONFLICT,
-            message: 'Email is already exist',
-          });
-    }
-    try {
-        const newUser = await Users.create({ email, password, subscription });
-        return res
-            .status(HttpCode.CREATED)
-            .json({
-            status: 'success',
-            code: HttpCode.CREATED,
-            data: {
-                id: newUser.id,
-                email: newUser.email,
-                subscription: newUser.subscription,
-                avatarURL: newUser.avatarURL,
-            },
-          });
+  const { name, email, password, subscription } = req.body;
+  const user = await Users.findByEmail(email);
+  if (user) {
+    return res
+      .status(HttpCode.CONFLICT)
+      .json({
+      status: 'error',
+      code: HttpCode.CONFLICT,
+      message: 'Email is already exist',
+    });
+  }
+  try {
+    // TOD: Send email for verify user
+
+    const newUser = await Users.create({ name, email, password, subscription });
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      // new CreateSenderNodemailer(),
+      new CreateSenderSendGrid(),
+    )
+    const statusEmail = await emailService.sendVerifyEmail(
+      newUser.email,
+      newUser.name,
+      newUser.verifyToken
+    );
+    return res
+      .status(HttpCode.CREATED)
+      .json({
+      status: 'success',
+      code: HttpCode.CREATED,
+        data: {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          subscription: newUser.subscription,
+          avatarURL: newUser.avatarURL,
+          successEmail: statusEmail,
+        },
+      });
     } catch(error) {
         next(error)
     }
@@ -42,7 +58,7 @@ const logIn = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await Users.findByEmail(email);
     const isValidPassword = await user?.isValidPassword(password);
-    if (!user || !isValidPassword) {
+    if (!user || !isValidPassword || !user?.isVerified) {
         return res
             .status(HttpCode.UNAUTHORIZED)
             .json({
@@ -181,6 +197,52 @@ const updateSubscription = async (req, res) => {
     });
   };
 
+const verifyUser = async (req, res, next) => {
+    const user = await Users.findUserByVerifyToken(req.params.verificationToken);
+    if (user) {
+      await Users.updateTokenVerify(user._id, true, null);
+      return res.status(HttpCode.OK).json({
+        status: "success",
+        code: HttpCode.OK,
+        data: {
+          message: 'Success',
+        },
+      });
+    }
+    return res
+      .status(HttpCode.BAD_REQUEST)
+      .json({
+      status: 'error',
+      code: HttpCode.BAD_REQUEST,
+      message: 'Invalid token',
+    });
+};
+
+const repeatEmailForVerifyUser = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await Users.findByEmail(email);
+  if (user) {
+    const { email, name, verifyToken } = user;
+    const emailService = new EmailService(
+      process.env.NODE_ENV,
+      // new CreateSenderSendGrid(),
+      new CreateSenderNodemailer(),
+    )
+    await emailService.sendVerifyEmail(
+      email,
+      name,
+      verifyToken,
+    )
+  }
+  return res.status(HttpCode.OK).json({
+    status: "success",
+    code: HttpCode.OK,
+    data: {
+      message: 'Verification email is send',
+    },
+  }); 
+};
+
 module.exports = {
     registration,
     logIn,
@@ -191,4 +253,6 @@ module.exports = {
     userStarter,
     userPro,
     userBusiness,
+    verifyUser,
+    repeatEmailForVerifyUser,
 };

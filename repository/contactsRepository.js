@@ -36,7 +36,7 @@ const getContactById = async (contactId, userId) => {
 };
 
 const removeContact = async (contactId, userId) => {
-  const result = await Contact.findOneAndRemove({ _id: contactId, owner:userId });
+  const result = await Contact.findOneAndRemove({ _id: contactId, owner: userId });
   return result;
 };
 
